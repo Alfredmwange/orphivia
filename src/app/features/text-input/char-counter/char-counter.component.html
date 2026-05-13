@@ -1,0 +1,16 @@
+<div class="char-counter">
+  <div class="progress-track">
+    <div
+      class="progress-fill"
+      [class.near-limit]="isNearLimit"
+      [class.at-limit]="isAtLimit"
+      [style.width.%]="progressPct">
+    </div>
+  </div>
+  <div class="counts">
+    <span>{{ wordCount }} {{ wordCount === 1 ? 'word' : 'words' }}</span>
+    <span [class.warn]="isNearLimit" [class.danger]="isAtLimit">
+      {{ charCount }} / {{ maxLength }} chars
+    </span>
+  </div>
+</div>

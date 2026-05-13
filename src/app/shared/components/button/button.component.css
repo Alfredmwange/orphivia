@@ -1,0 +1,29 @@
+.button {
+  border: none;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button.primary {
+  background: linear-gradient(135deg, #5d9cff, #5df0c0);
+  color: #050b1a;
+  padding: 0.95rem 1.45rem;
+}
+
+.button.secondary {
+  background: rgba(255,255,255,0.08);
+  color: #edf1ff;
+  padding: 0.9rem 1.25rem;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

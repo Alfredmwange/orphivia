@@ -1,0 +1,19 @@
+<div class="playback-bar">
+  <div class="playback-bar__status">
+    <span class="status-dot"
+      [class.status-dot--speaking]="isSpeaking"
+      [class.status-dot--paused]="isPaused">
+    </span>
+    <span class="status-label">
+      {{ isSpeaking ? 'Speaking…' : isPaused ? 'Paused' : 'Ready' }}
+    </span>
+  </div>
+  <div class="playback-bar__actions">
+    <app-button variant="primary"   [disabled]="isSpeaking && !isPaused" (clicked)="play.emit()">▶ Play</app-button>
+    <app-button variant="secondary" [disabled]="!isSpeaking || isPaused"  (clicked)="pause.emit()">⏸ Pause</app-button>
+    <app-button variant="secondary" [disabled]="!isPaused"                (clicked)="resume.emit()">▶ Resume</app-button>
+    <app-button variant="secondary" [disabled]="!isSpeaking && !isPaused" (clicked)="stop.emit()">⏹ Stop</app-button>
+    <app-button variant="secondary" (clicked)="reset.emit()">↺ Reset</app-button>
+    <app-button variant="secondary" (clicked)="download.emit()">⬇ Download</app-button>
+  </div>
+</div>

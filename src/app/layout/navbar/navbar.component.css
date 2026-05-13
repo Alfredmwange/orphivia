@@ -1,0 +1,58 @@
+.navbar-shell {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: rgba(5, 9, 20, 0.85);
+  border-bottom: 1px solid rgba(120, 150, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.brand-mark {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.65rem;
+  background: linear-gradient(135deg, #5d9cff, #5df0c0);
+  flex-shrink: 0;
+}
+
+.brand-title {
+  display: block;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-size: 1rem;
+}
+
+.brand-subtitle {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(167,183,255,0.7);
+}
+
+.navbar-nav { display: flex; gap: 0.25rem; }
+
+.nav-item {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  color: rgba(216,226,255,0.7);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.15s, background 0.15s;
+}
+
+.nav-item:hover,
+.nav-item--active {
+  color: #edf1ff;
+  background: rgba(93,156,255,0.1);
+}

@@ -1,0 +1,14 @@
+<div class="slider-container">
+  <label class="slider-label" *ngIf="label">
+    {{ label }} <span>{{ value.toFixed(2) }}</span>
+  </label>
+  <input
+    type="range"
+    [min]="min"
+    [max]="max"
+    [step]="step"
+    [value]="value"
+    (input)="onValueChange($event)"
+    class="slider"
+  />
+</div>

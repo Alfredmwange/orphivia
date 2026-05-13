@@ -1,0 +1,38 @@
+<app-card [glow]="true" class="history-card">
+  <div class="history-header" (click)="toggleExpanded()">
+    <h2>
+      <span class="history-icon">🕑</span>
+      Speech history
+      <span class="count-badge" *ngIf="entries.length > 0">{{ entries.length }}</span>
+    </h2>
+    <span class="toggle-hint">{{ isExpanded ? '▲ Collapse' : '▼ Expand' }}</span>
+  </div>
+
+  <div class="history-body" *ngIf="isExpanded">
+    <p class="empty-note" *ngIf="entries.length === 0">
+      No history yet — play some speech to see entries here.
+    </p>
+
+    <div class="entry-list" *ngIf="entries.length > 0">
+      <div class="entry" *ngFor="let entry of entries">
+        <div class="entry-main">
+          <p class="entry-text">{{ truncate(entry.text) }}</p>
+          <div class="entry-meta">
+            <span class="meta-chip">{{ entry.voiceName }}</span>
+            <span class="meta-chip">{{ entry.language }}</span>
+            <span class="meta-chip">p: {{ entry.settings.pitch | number:'1.2-2' }}</span>
+            <span class="meta-chip">r: {{ entry.settings.rate  | number:'1.2-2' }}</span>
+            <span class="timestamp">{{ entry.timestamp | date:'HH:mm:ss' }}</span>
+          </div>
+        </div>
+        <div class="entry-actions">
+          <button class="icon-btn" title="Remove" (click)="onRemove(entry.id)">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="history-footer" *ngIf="entries.length > 0">
+      <app-button variant="secondary" (clicked)="onClearAll()">Clear all</app-button>
+    </div>
+  </div>
+</app-card>

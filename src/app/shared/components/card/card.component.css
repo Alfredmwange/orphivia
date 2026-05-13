@@ -1,0 +1,10 @@
+.card {
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(120, 150, 255, 0.08);
+}
+
+.card-glow {
+  box-shadow: 0 24px 80px rgba(56, 94, 204, 0.08);
+}

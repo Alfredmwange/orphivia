@@ -1,0 +1,14 @@
+<button
+  class="style-card"
+  [class.style-card--active]="active"
+  (click)="onSelect()"
+  [attr.aria-pressed]="active">
+  <div class="style-card__icon">{{ styleIcon }}</div>
+  <strong class="style-card__label">{{ style.label }}</strong>
+  <small class="style-card__desc">{{ style.description }}</small>
+  <div class="style-card__params">
+    <span>P {{ style.pitch }}</span>
+    <span>S {{ style.rate }}</span>
+    <span>V {{ style.volume }}</span>
+  </div>
+</button>

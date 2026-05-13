@@ -1,0 +1,20 @@
+.waveform {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 36px;
+  padding: 2px 0;
+}
+
+.waveform__bar {
+  display: inline-block;
+  width: 3px;
+  border-radius: 2px;
+  background: rgba(93, 156, 255, 0.25);
+  min-height: 4px;
+  transition: height 0.08s ease;
+}
+
+.waveform--active .waveform__bar {
+  background: linear-gradient(to top, #5d9cff, #5df0c0);
+}

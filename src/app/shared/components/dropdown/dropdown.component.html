@@ -1,0 +1,10 @@
+<div class="dropdown-container">
+  <label *ngIf="label">{{ label }}</label>
+  <select (change)="onSelectionChange($event)" class="dropdown">
+    <option
+      *ngFor="let option of options; let i = index"
+      [selected]="option.value === selectedValue">
+      {{ option.label }}
+    </option>
+  </select>
+</div>

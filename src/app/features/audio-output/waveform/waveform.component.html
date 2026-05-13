@@ -1,0 +1,7 @@
+<div class="waveform" [class.waveform--active]="active" aria-hidden="true">
+  <span
+    *ngFor="let bar of bars"
+    class="waveform__bar"
+    [style.height.px]="bar.height">
+  </span>
+</div>
