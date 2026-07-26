@@ -1,12 +1,29 @@
 <header class="navbar-shell">
   <div class="brand">
-    <div class="brand-mark" aria-hidden="true"></div>
-    <div>
-      <span class="brand-title">Voicera</span>
+    <div class="brand-mark" aria-hidden="true">
+      <img
+        class="brand-logo"
+        src="/assets/images/logo1.png"
+        alt="Orphivia logo"
+        onerror="this.style.display='none'; this.parentElement.classList.add('brand-mark--fallback')"
+      />
+      <span class="brand-mark__core"></span>
+    </div>
+    <div class="brand-copy">
+      <span class="brand-title">Orphivia</span>
       <span class="brand-subtitle">Text-to-speech studio</span>
     </div>
   </div>
+
   <nav class="navbar-nav" aria-label="Main navigation">
-    <a routerLink="/" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{exact:true}" class="nav-item">Home</a>
+    <a routerLink="/" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item">Home</a>
+    <a routerLink="/history" routerLinkActive="nav-item--active" class="nav-item">History</a>
+    <a routerLink="/voices" routerLinkActive="nav-item--active" class="nav-item">Voices</a>
+    <a routerLink="/settings" routerLinkActive="nav-item--active" class="nav-item">Settings</a>
   </nav>
+
+  <div class="navbar-actions">
+    <button type="button" class="theme-toggle">☀</button>
+    <div class="profile-pill">P</div>
+  </div>
 </header>

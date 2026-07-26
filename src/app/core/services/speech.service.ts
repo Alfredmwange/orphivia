@@ -3,6 +3,8 @@ import { VoiceOption } from '../../models/voice.model';
 import { VoiceSettings } from '../../models/settings.model';
 import { HistoryService } from './history.service';
 
+export type SpeechProgressCallback = (progress: number) => void;
+
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
   private utterance: SpeechSynthesisUtterance | undefined;
@@ -29,11 +31,28 @@ export class SpeechService {
     return utterance;
   }
 
-  speak(text: string, voice: VoiceOption | null, settings: VoiceSettings): void {
+  speak(
+    text: string,
+    voice: VoiceOption | null,
+    settings: VoiceSettings,
+    startIndex = 0,
+    onProgress?: SpeechProgressCallback
+  ): void {
     if (!text.trim()) return;
     this.cancel();
-    const utterance = this.createUtterance(text, voice, settings);
+
+    const segment = text.slice(startIndex);
+    const utterance = this.createUtterance(segment, voice, settings);
+
+    utterance.onboundary = (event) => {
+      const totalLength = Math.max(text.length, 1);
+      const currentIndex = startIndex + event.charIndex;
+      const progress = Math.min(100, Math.max(0, Math.round((currentIndex / totalLength) * 100)));
+      onProgress?.(progress);
+    };
+
     utterance.onend = () => {
+      onProgress?.(100);
       this.historyService.addEntry({
         text,
         voiceName: voice?.name ?? 'Default',
@@ -41,6 +60,7 @@ export class SpeechService {
         settings: { ...settings }
       });
     };
+
     this.synth.speak(utterance);
   }
 

@@ -1,4 +1,4 @@
-# Voicera
+# orphivia
 
 Natural text-to-speech for every voice. Type anything, choose a voice, apply a style, and listen instantly.
 
@@ -16,8 +16,8 @@ Natural text-to-speech for every voice. Type anything, choose a voice, apply a s
 
 1. Clone the repository:
    ```
-   git clone https://github.com/Alfredmwange/voicera.git
-   cd voicera
+   git clone https://github.com/Alfredmwange/orphivia.git
+   cd orphivia
    ```
 
 2. Install dependencies:
@@ -55,4 +55,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is private.</content>
-<parameter name="filePath">c:\Users\alfre\OneDrive\Desktop\Programming\voicera\README.md
+<parameter name="filePath">

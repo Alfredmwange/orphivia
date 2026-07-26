@@ -1,0 +1,241 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <p class="page-eyebrow">Settings</p>
+      <h1>Customize Orphivia</h1>
+    </div>
+    <a routerLink="/" class="ghost-link">Back to studio</a>
+  </div>
+
+  <p class="status-pill">{{ statusMessage }}</p>
+  <p class="settings-hint">Changes apply instantly and are saved for your next visit.</p>
+
+  <div class="settings-grid">
+    <article class="settings-card">
+      <h2>General</h2>
+      <label class="field">
+        <span>Theme</span>
+        <select [ngModel]="settings.theme" (ngModelChange)="updateSetting('theme', $event)">
+          <option *ngFor="let option of themeOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Accent color</span>
+        <select [ngModel]="settings.accentColor" (ngModelChange)="updateSetting('accentColor', $event)">
+          <option *ngFor="let option of accentOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>App language</span>
+        <select [ngModel]="settings.language" (ngModelChange)="updateSetting('language', $event)">
+          <option *ngFor="let option of languageOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </label>
+    </article>
+
+    <article class="settings-card">
+      <h2>Default voice</h2>
+      <label class="field">
+        <span>Default behavior</span>
+        <select [ngModel]="settings.defaultVoiceMode" (ngModelChange)="updateSetting('defaultVoiceMode', $event)">
+          <option value="default">Use defaults each time</option>
+          <option value="none">Choose each time</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Default provider</span>
+        <select [ngModel]="settings.defaultProvider" (ngModelChange)="updateSetting('defaultProvider', $event)">
+          <option *ngFor="let option of providerOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Default voice</span>
+        <select [ngModel]="settings.defaultVoice" (ngModelChange)="updateSetting('defaultVoice', $event)">
+          <option *ngFor="let option of voiceOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Default language</span>
+        <select [ngModel]="settings.defaultLanguage" (ngModelChange)="updateSetting('defaultLanguage', $event)">
+          <option *ngFor="let option of languageOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Default style</span>
+        <select [ngModel]="settings.defaultStyle" (ngModelChange)="updateSetting('defaultStyle', $event)">
+          <option *ngFor="let option of styleOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </label>
+    </article>
+
+    <article class="settings-card">
+      <h2>Audio settings</h2>
+      <label class="field">
+        <span>Output format</span>
+        <select [ngModel]="settings.outputFormat" (ngModelChange)="updateSetting('outputFormat', $event)">
+          <option value="mp3">MP3</option>
+          <option value="wav">WAV</option>
+          <option value="ogg">OGG</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Audio quality</span>
+        <select [ngModel]="settings.audioQuality" (ngModelChange)="updateSetting('audioQuality', $event)">
+          <option value="standard">Standard</option>
+          <option value="high">High</option>
+          <option value="low">Low</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Default volume</span>
+        <div class="range-row">
+          <input type="range" min="0" max="100" step="5" [ngModel]="settings.defaultVolume" (ngModelChange)="updateSetting('defaultVolume', +$event)">
+          <strong>{{ settings.defaultVolume }}%</strong>
+        </div>
+      </label>
+      <label class="field">
+        <span>Playback speed</span>
+        <input type="number" step="0.1" [ngModel]="settings.playbackSpeed" (ngModelChange)="updateSetting('playbackSpeed', +$event)">
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.normalizeAudio" (ngModelChange)="updateSetting('normalizeAudio', $event)">
+        <span>Normalize audio</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.trimSilence" (ngModelChange)="updateSetting('trimSilence', $event)">
+        <span>Trim silence</span>
+      </label>
+    </article>
+
+    <article class="settings-card">
+      <h2>AI generation</h2>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.autoDetectLanguage" (ngModelChange)="updateSetting('autoDetectLanguage', $event)">
+        <span>Auto detect language</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.smartPunctuation" (ngModelChange)="updateSetting('smartPunctuation', $event)">
+        <span>Smart punctuation</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.aiRewriteBeforeSpeaking" (ngModelChange)="updateSetting('aiRewriteBeforeSpeaking', $event)">
+        <span>AI rewrite before speaking</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.expandAbbreviations" (ngModelChange)="updateSetting('expandAbbreviations', $event)">
+        <span>Expand abbreviations</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.convertNumbersToWords" (ngModelChange)="updateSetting('convertNumbersToWords', $event)">
+        <span>Convert numbers to words</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.spellCorrection" (ngModelChange)="updateSetting('spellCorrection', $event)">
+        <span>Spell correction</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.profanityFilter" (ngModelChange)="updateSetting('profanityFilter', $event)">
+        <span>Profanity filter</span>
+      </label>
+    </article>
+
+    <article class="settings-card">
+      <h2>History</h2>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.saveSpeechHistory" (ngModelChange)="updateSetting('saveSpeechHistory', $event)">
+        <span>Save speech history</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.saveGeneratedAudio" (ngModelChange)="updateSetting('saveGeneratedAudio', $event)">
+        <span>Save generated audio</span>
+      </label>
+      <label class="field">
+        <span>History limit</span>
+        <input type="number" [ngModel]="settings.historyLimit" (ngModelChange)="updateSetting('historyLimit', +$event)">
+      </label>
+      <label class="field">
+        <span>Auto delete after (days)</span>
+        <input type="number" [ngModel]="settings.autoDeleteAfter" (ngModelChange)="updateSetting('autoDeleteAfter', +$event)">
+      </label>
+      <button type="button" class="action-button" (click)="clearHistory()">Clear history</button>
+    </article>
+
+    <article class="settings-card">
+      <h2>Downloads</h2>
+      <label class="field">
+        <span>Default download folder</span>
+        <input type="text" [ngModel]="settings.defaultDownloadFolder" (ngModelChange)="updateSetting('defaultDownloadFolder', $event)">
+      </label>
+      <label class="field">
+        <span>Filename format</span>
+        <input type="text" [ngModel]="settings.filenameFormat" (ngModelChange)="updateSetting('filenameFormat', $event)">
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.automaticallyDownload" (ngModelChange)="updateSetting('automaticallyDownload', $event)">
+        <span>Automatically download</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.openFolderAfterDownload" (ngModelChange)="updateSetting('openFolderAfterDownload', $event)">
+        <span>Open folder after download</span>
+      </label>
+    </article>
+
+    <article class="settings-card">
+      <h2>Keyboard shortcuts</h2>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.enableKeyboardShortcuts" (ngModelChange)="updateSetting('enableKeyboardShortcuts', $event)">
+        <span>Enable shortcuts</span>
+      </label>
+      <button type="button" class="action-button" (click)="restoreShortcuts()">Restore defaults</button>
+      <p class="helper-text">Shortcuts: Space = Play/Pause, Esc = Stop, Ctrl + Enter = Generate</p>
+    </article>
+
+    <article class="settings-card">
+      <h2>Notifications</h2>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.notificationsGenerationComplete" (ngModelChange)="updateSetting('notificationsGenerationComplete', $event)">
+        <span>Generation complete</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.notificationsDownloadFinished" (ngModelChange)="updateSetting('notificationsDownloadFinished', $event)">
+        <span>Download finished</span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [ngModel]="settings.notificationsUpdateAvailable" (ngModelChange)="updateSetting('notificationsUpdateAvailable', $event)">
+        <span>Update available</span>
+      </label>
+    </article>
+
+    <article class="settings-card">
+      <h2>Security</h2>
+      <button type="button" class="action-button" (click)="clearCache()">Clear cache</button>
+      <button type="button" class="action-button secondary" (click)="resetToDefaults()">Reset all settings</button>
+    </article>
+
+    <article class="settings-card">
+      <h2>Account</h2>
+      <label class="field">
+        <span>Profile picture</span>
+        <input type="text" [ngModel]="settings.profilePicture" (ngModelChange)="updateSetting('profilePicture', $event)">
+      </label>
+      <label class="field">
+        <span>Username</span>
+        <input type="text" [ngModel]="settings.username" (ngModelChange)="updateSetting('username', $event)">
+      </label>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" [ngModel]="settings.email" (ngModelChange)="updateSetting('email', $event)">
+      </label>
+      <button type="button" class="action-button" (click)="saveProfile()">Save profile</button>
+    </article>
+
+    <article class="settings-card">
+      <h2>About</h2>
+      <p><strong>orphivia</strong></p>
+      <p>Version: {{ settings.version }}</p>
+      <p>Developer: {{ settings.developer }}</p>
+      <p>License: {{ settings.license }}</p>
+      <button type="button" class="action-button" (click)="checkForUpdates()">Check for updates</button>
+    </article>
+  </div>
+</section>

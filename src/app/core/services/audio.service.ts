@@ -4,36 +4,50 @@ import { VoiceSettings } from '../../models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class AudioService {
-  /**
-   * Downloads generated speech as a WAV file using the Web Audio API + MediaRecorder.
-   * Falls back to a warning if the browser doesn't support audio capture.
-   */
   async downloadAudio(
     text: string,
     voice: VoiceOption | null,
     settings: VoiceSettings
   ): Promise<void> {
-    if (!('MediaRecorder' in window)) {
-      console.warn('Audio download: MediaRecorder not supported in this browser.');
-      alert('Audio download is not supported in your browser. Try Chrome or Edge.');
+    if (!('MediaRecorder' in window) || !navigator.mediaDevices?.getDisplayMedia) {
+      console.warn('Audio download is not supported in this browser.');
+      alert('Audio download requires a browser with tab-audio capture support such as Chrome or Edge.');
       return;
     }
 
     try {
-      const audioCtx = new AudioContext();
-      const destination = audioCtx.createMediaStreamDestination();
-      const recorder = new MediaRecorder(destination.stream);
+      const displayStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true
+      });
+
+      const audioTracks = displayStream.getAudioTracks();
+      if (!audioTracks.length) {
+        displayStream.getTracks().forEach(track => track.stop());
+        alert('Please allow tab audio capture and try again.');
+        return;
+      }
+
+      const audioOnlyStream = new MediaStream(audioTracks);
+      const recorder = new MediaRecorder(audioOnlyStream, {
+        mimeType: this.getPreferredMimeType()
+      });
       const chunks: BlobPart[] = [];
 
-      recorder.ondataavailable = (e) => chunks.push(e.data);
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) chunks.push(event.data);
+      };
+
       recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
+        const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `voicera-${Date.now()}.webm`;
-        a.click();
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `orphivia-${Date.now()}.webm`;
+        link.click();
         URL.revokeObjectURL(url);
+        displayStream.getTracks().forEach(track => track.stop());
+        audioOnlyStream.getTracks().forEach(track => track.stop());
       };
 
       const utterance = new SpeechSynthesisUtterance(text);
@@ -45,12 +59,29 @@ export class AudioService {
         if (match) utterance.voice = match;
       }
 
+      utterance.onend = () => {
+        if (recorder.state !== 'inactive') {
+          recorder.stop();
+        }
+      };
+
+      utterance.onerror = () => {
+        if (recorder.state !== 'inactive') {
+          recorder.stop();
+        }
+      };
+
       recorder.start();
+      window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
-      utterance.onend = () => recorder.stop();
     } catch (err) {
       console.error('Audio download failed:', err);
-      alert('Could not capture audio. This feature requires a secure context (HTTPS).');
+      alert('Could not capture the generated audio. Please allow browser tab audio sharing and try again.');
     }
+  }
+
+  private getPreferredMimeType(): string | undefined {
+    const preferredTypes = ['audio/webm;codecs=opus', 'audio/webm'];
+    return preferredTypes.find(type => MediaRecorder.isTypeSupported(type));
   }
 }

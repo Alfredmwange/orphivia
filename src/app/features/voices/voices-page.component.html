@@ -1,0 +1,24 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <p class="page-eyebrow">Voice marketplace</p>
+      <h1>Browse thousands of voices</h1>
+    </div>
+    <a routerLink="/" class="ghost-link">Back to studio</a>
+  </div>
+
+  <div class="category-row">
+    <button type="button" class="chip active" *ngFor="let category of categories">{{ category }}</button>
+  </div>
+
+  <div class="voice-grid">
+    <article class="voice-card" *ngFor="let voice of voices">
+      <div class="voice-card__top">
+        <h3>{{ voice.name }}</h3>
+        <span class="pill">{{ voice.accent }}</span>
+      </div>
+      <p>{{ voice.label }}</p>
+      <button class="ghost-button" type="button">Preview</button>
+    </article>
+  </div>
+</section>

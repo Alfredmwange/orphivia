@@ -1,0 +1,44 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <p class="page-eyebrow">Speech history</p>
+      <h1>Recent generations</h1>
+    </div>
+    <a routerLink="/" class="ghost-link">Back to studio</a>
+  </div>
+
+  <div class="filters">
+    <input type="text" [(ngModel)]="search" placeholder="Search generations" class="search-input" />
+    <select [(ngModel)]="providerFilter" class="filter-control">
+      <option value="all">Provider</option>
+      <option value="elevenlabs">ElevenLabs</option>
+      <option value="azure">Azure</option>
+      <option value="google">Google</option>
+    </select>
+    <select [(ngModel)]="voiceFilter" class="filter-control">
+      <option value="all">Voice</option>
+      <option value="rachel">Rachel</option>
+      <option value="adam">Adam</option>
+      <option value="bella">Bella</option>
+    </select>
+    <button type="button" class="filter-control" [class.active]="favoritesOnly" (click)="favoritesOnly = !favoritesOnly">⭐ Favorites</button>
+  </div>
+
+  <div class="history-list" *ngIf="filteredEntries.length; else emptyState">
+    <article class="history-card" *ngFor="let entry of filteredEntries.slice(0, 20)">
+      <div class="history-card__content">
+        <p class="history-title">{{ entry.text }}</p>
+        <div class="history-meta">
+          <span>{{ entry.voiceName }}</span>
+          <span>{{ entry.language }}</span>
+          <span>{{ entry.timestamp | date:'short' }}</span>
+        </div>
+      </div>
+      <button class="ghost-button" type="button">Open</button>
+    </article>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">No history yet. Generate a voice and it will appear here.</div>
+  </ng-template>
+</section>

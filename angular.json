@@ -2,7 +2,7 @@
   "$schema": "https://angular.io/config/angular.json",
   "version": 1,
   "projects": {
-    "voicera": {
+    "orphivia": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -11,7 +11,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
-            "outputPath": "dist/voicera",
+            "outputPath": "dist/orphivia",
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "tsconfig.json",
@@ -53,10 +53,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "voicera:build:production"
+              "buildTarget": "orphivia:build:production"
             },
             "development": {
-              "buildTarget": "voicera:build:development"
+              "buildTarget": "orphivia:build:development"
             }
           },
           "defaultConfiguration": "development"

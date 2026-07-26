@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  appName: 'Voicera',
+  appName: 'orphivia',
   apiEnabled: false
 };

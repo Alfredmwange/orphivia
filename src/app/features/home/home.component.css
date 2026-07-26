@@ -8,16 +8,20 @@
 
 .hero-card {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   position: relative;
+  text-align: center;
 }
 
 .hero-copy {
-  min-width: 260px;
-  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  margin-bottom: 1.4rem;
 }
 
 .eyebrow {
@@ -25,34 +29,89 @@
   margin-bottom: 0.75rem;
   color: #7c9eff;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  font-size: 1.2rem;
+  font-weight: 800;
 }
 
 .hero-card h1 {
   margin: 0 0 0.6rem;
-  font-size: 1.6rem;
-  line-height: 1.3;
+  font-size: 2.6rem;
+  line-height: 1.25;
 }
 
 .hero-card p {
   margin: 0;
   line-height: 1.8;
-  max-width: 520px;
+  max-width: 620px;
   color: rgba(237, 241, 255, 0.75);
-  font-size: 0.95rem;
+  font-size: 1rem;
+}
+
+.provider-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.provider-label {
+  color: rgba(237,241,255,0.75);
+  font-size: 0.9rem;
+}
+
+.provider-pill {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(93,156,255,0.12);
+  color: #7c9eff;
+  font-weight: 700;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  justify-content: center;
+  gap: 0.8rem;
   align-items: center;
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-progress {
+  width: min(100%, 760px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.progress-slider {
+  width: 100%;
+  accent-color: #5d9cff;
+  cursor: pointer;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(237, 241, 255, 0.7);
+  font-size: 0.82rem;
 }
 
 .hero-waveform {
-  flex-basis: 100%;
-  margin-top: 0.5rem;
+  width: 100%;
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .workspace-grid {
@@ -109,6 +168,64 @@
   border-color: rgba(93, 156, 255, 0.5);
 }
 
+.voice-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.text-actions,
+.text-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+  color: rgba(237,241,255,0.7);
+  font-size: 0.9rem;
+}
+
+.advanced-group {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.advanced-group h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #7c9eff;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: rgba(237,241,255,0.8);
+}
+
+.advanced-toggle {
+  border: 1px solid rgba(93, 156, 255, 0.25);
+  background: rgba(93, 156, 255, 0.12);
+  color: #7c9eff;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.advanced-panel {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .voice-status {
   display: flex;
   flex-wrap: wrap;
@@ -134,13 +251,14 @@
 
 .style-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.85rem;
 }
 
 .style-chip {
   display: flex;
   flex-direction: column;
+  min-height: 110px;
   padding: 1rem;
   text-align: left;
   background: rgba(255,255,255,0.04);

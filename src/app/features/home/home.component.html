@@ -3,27 +3,48 @@
   <!-- Hero -->
   <app-card [glow]="true" class="hero-card">
     <div class="hero-copy">
-      <span class="eyebrow">Voicera</span>
+      <span class="eyebrow">Orphivia</span>
       <h1>Natural text-to-speech for every voice.</h1>
-      <p>Type anything, choose a voice, apply a style, and listen instantly. Built with the Web Speech API and a scalable Angular architecture.</p>
+      <p>Create realistic speech using the world's best AI voice providers.</p>
     </div>
+
+    <div class="provider-bar">
+      <span class="provider-label">Provider</span>
+      <div class="provider-pill">ElevenLabs ▼</div>
+    </div>
+
     <div class="hero-actions">
       <app-button variant="primary" [disabled]="isSpeaking && !isPaused" (clicked)="onSpeak()">
-        ▶ Play speech
+        ▶ Play
       </app-button>
-      <app-button variant="secondary" [disabled]="!isSpeaking || isPaused" (clicked)="onPause()">
-        ⏸ Pause
-      </app-button>
-      <app-button variant="secondary" [disabled]="!isPaused" (clicked)="onResume()">
-        ▶ Resume
-      </app-button>
-      <app-button variant="secondary" [disabled]="!isSpeaking && !isPaused" (clicked)="onStop()">
-        ⏹ Stop
+      <app-button variant="secondary" (clicked)="onTogglePlayback()">
+        {{ isSpeaking && !isPaused ? '⏸ Pause' : '▶ Resume' }}
       </app-button>
       <app-button variant="secondary" (clicked)="onReset()">
-        ↺ Reset
+        ⏹ Stop
       </app-button>
+      <app-button variant="secondary" [disabled]="isDownloading" (clicked)="onDownload()">
+        {{ isDownloading ? '⏳ Downloading…' : '⬇ Download' }}
+      </app-button>
+      <app-button variant="secondary">⤴ Share</app-button>
     </div>
+
+    <div class="hero-progress">
+      <div class="progress-meta">
+        <span>Playback</span>
+        <span>{{ playbackPositionLabel }} / {{ playbackDurationLabel }}</span>
+      </div>
+      <input
+        type="range"
+        class="progress-slider"
+        min="0"
+        max="100"
+        [value]="playbackProgress"
+        (input)="onSeekChange($event)"
+        [disabled]="!text.trim()"
+      />
+    </div>
+
     <app-waveform [active]="isSpeaking && !isPaused" class="hero-waveform"></app-waveform>
   </app-card>
 
@@ -33,13 +54,28 @@
     <!-- Text input -->
     <app-card [glow]="true" class="panel panel-large">
       <h2>Text input</h2>
-      <textarea [(ngModel)]="text" placeholder="Enter your script here..." rows="9"></textarea>
+      <textarea [(ngModel)]="text" (input)="onTextChange()" placeholder="Enter your script here..." rows="9"></textarea>
+      <div class="text-actions">
+        <app-button variant="secondary">📎 Drag & drop</app-button>
+        <app-button variant="secondary">📋 Paste</app-button>
+        <app-button variant="secondary">📄 Import PDF</app-button>
+        <app-button variant="secondary">📄 Import DOCX</app-button>
+      </div>
+      <div class="text-meta">
+        <span>Word count: {{ text.split(/\s+/).filter(word => !!word).length }}</span>
+        <span>Clear text</span>
+      </div>
       <app-char-counter [text]="text"></app-char-counter>
     </app-card>
 
     <!-- Voice selection -->
     <app-card [glow]="true" class="panel">
-      <h2>Voice selection</h2>
+      <div class="voice-card-header">
+        <h2>AI Voice Selection</h2>
+        <button type="button" class="advanced-toggle" (click)="toggleAdvancedVoiceControls()">
+          {{ showAdvancedVoiceControls ? 'Hide advanced' : 'Advanced' }}
+        </button>
+      </div>
       <input
         type="text"
         placeholder="Search voices..."
@@ -48,36 +84,63 @@
         class="search-input"
       />
       <app-dropdown
-        label="Language"
-        [options]="languageOptions()"
-        [selectedValue]="languageFilter"
-        (selectionChange)="languageFilter = $event?.toString() ?? ''; onLanguageFilterChange()">
-      </app-dropdown>
-      <app-dropdown
-        label="Voice"
-        [options]="voiceSelectOptions()"
-        [selectedValue]="selectedVoice"
-        (selectionChange)="selectedVoice = $event ? $any($event) : null">
-      </app-dropdown>
-      <app-dropdown
-        label="Style preset"
-        [options]="styleOptions()"
-        [selectedValue]="activeStyleId"
-        (selectionChange)="applyStyle($event?.toString() ?? '')">
+        label="Voice & style"
+        [options]="voicePresetOptions()"
+        [selectedValue]="selectedVoicePreset"
+        (selectionChange)="onVoicePresetChange($event?.toString() ?? '')">
       </app-dropdown>
       <div class="voice-status" *ngIf="selectedVoice">
-        <span class="badge">{{ selectedVoice.language }}</span>
+        <span class="badge">Current provider</span>
+        <span class="badge">ElevenLabs</span>
+        <span class="badge">{{ detectedLanguageLabel }}</span>
         <span class="badge">{{ selectedVoice.gender }}</span>
         <span class="badge active-style">{{ activeStyleId | titlecase }}</span>
+      </div>
+      <div class="voice-status" *ngIf="detectedLanguages.length">
+        <span *ngFor="let language of detectedLanguages" class="badge">{{ language }}</span>
+      </div>
+      <div class="advanced-panel" *ngIf="showAdvancedVoiceControls">
+        <app-dropdown
+          label="Language"
+          [options]="languageOptions()"
+          [selectedValue]="languageFilter"
+          (selectionChange)="languageFilter = $event?.toString() ?? ''; onLanguageFilterChange()">
+        </app-dropdown>
+        <app-dropdown
+          label="Voice"
+          [options]="voiceSelectOptions()"
+          [selectedValue]="selectedVoice"
+          (selectionChange)="selectedVoice = $event ? $any($event) : null">
+        </app-dropdown>
+        <app-dropdown
+          label="Style preset"
+          [options]="styleOptions()"
+          [selectedValue]="activeStyleId"
+          (selectionChange)="applyStyle($event?.toString() ?? '')">
+        </app-dropdown>
       </div>
     </app-card>
 
     <!-- Controls -->
-    <app-card [glow]="true" class="panel">
-      <h2>Voice controls</h2>
-      <app-slider label="Pitch"  [min]="0.5" [max]="2"  [step]="0.05" [value]="settings.pitch"  (valueChange)="settings.pitch = $event"></app-slider>
-      <app-slider label="Speed"  [min]="0.5" [max]="2"  [step]="0.05" [value]="settings.rate"   (valueChange)="settings.rate = $event"></app-slider>
-      <app-slider label="Volume" [min]="0"   [max]="1"  [step]="0.05" [value]="settings.volume" (valueChange)="settings.volume = $event"></app-slider>
+    <app-card [glow]="true" class="panel" *ngIf="showAdvancedVoiceControls">
+      <h2>Voice Controls</h2>
+      <div class="advanced-group">
+        <h3>Voice Controls</h3>
+        <app-slider label="Pitch"  [min]="0.5" [max]="2"  [step]="0.05" [value]="settings.pitch"  (valueChange)="settings.pitch = $event"></app-slider>
+        <app-slider label="Speed"  [min]="0.5" [max]="2"  [step]="0.05" [value]="settings.rate"   (valueChange)="settings.rate = $event"></app-slider>
+        <app-slider label="Volume" [min]="0"   [max]="1"  [step]="0.05" [value]="settings.volume" (valueChange)="settings.volume = $event"></app-slider>
+      </div>
+      <div class="advanced-group">
+        <h3>Audio Quality</h3>
+        <app-dropdown label="Output" [options]="[{value:'mp3',label:'MP3'},{value:'wav',label:'WAV'},{value:'ogg',label:'OGG'}]" [selectedValue]="'mp3'" (selectionChange)="null"></app-dropdown>
+        <app-dropdown label="Bitrate" [options]="[{value:'128',label:'128 kbps'},{value:'192',label:'192 kbps'},{value:'320',label:'320 kbps'}]" [selectedValue]="'320'" (selectionChange)="null"></app-dropdown>
+      </div>
+      <div class="advanced-group">
+        <h3>Speech Options</h3>
+        <div class="option-row"><input type="checkbox" checked /> <span>Auto Pause</span></div>
+        <div class="option-row"><input type="checkbox" checked /> <span>Normalize Audio</span></div>
+        <div class="option-row"><input type="checkbox" /> <span>Noise Reduction</span></div>
+      </div>
     </app-card>
 
     <!-- Style cards -->
@@ -103,7 +166,6 @@
   <!-- Footer -->
   <app-card [glow]="true" class="footer-card">
     <p>Real-time speech powered by the browser's Speech Synthesis API. Voice availability depends on your OS and browser.</p>
-    <app-button variant="secondary" (clicked)="onDownload()">⬇ Download audio</app-button>
   </app-card>
 
 </main>
