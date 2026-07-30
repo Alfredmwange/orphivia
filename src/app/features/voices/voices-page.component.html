@@ -2,23 +2,36 @@
   <div class="page-header">
     <div>
       <p class="page-eyebrow">Voice marketplace</p>
-      <h1>Browse thousands of voices</h1>
+      <h1>Browse voices by provider</h1>
     </div>
     <a routerLink="/" class="ghost-link">Back to studio</a>
   </div>
 
+  <div class="toolbar">
+    <select class="field" [(ngModel)]="selectedProvider" (ngModelChange)="loadVoices()">
+      <option value="browser">Browser speech</option>
+      <option value="elevenlabs">ElevenLabs</option>
+      <option value="azure">Azure Speech</option>
+      <option value="google">Google TTS</option>
+    </select>
+    <input class="field" type="text" placeholder="Search voices" [(ngModel)]="searchTerm" (input)="applyFilters()">
+  </div>
+
   <div class="category-row">
-    <button type="button" class="chip active" *ngFor="let category of categories">{{ category }}</button>
+    <button type="button" class="chip" *ngFor="let category of categories" [class.active]="activeCategory === category" (click)="activeCategory = category; applyFilters()">{{ category }}</button>
   </div>
 
   <div class="voice-grid">
-    <article class="voice-card" *ngFor="let voice of voices">
+    <article class="voice-card" *ngFor="let voice of filteredVoices">
       <div class="voice-card__top">
         <h3>{{ voice.name }}</h3>
-        <span class="pill">{{ voice.accent }}</span>
+        <span class="pill">{{ voice.language }}</span>
       </div>
-      <p>{{ voice.label }}</p>
-      <button class="ghost-button" type="button">Preview</button>
+      <p>{{ voice.description }}</p>
+      <div class="card-actions">
+        <button class="ghost-button" type="button" (click)="previewVoice(voice)">Preview</button>
+        <button class="ghost-button" type="button" (click)="toggleFavorite(voice.id)">{{ favorites.has(voice.id) ? '★' : '☆' }}</button>
+      </div>
     </article>
   </div>
 </section>

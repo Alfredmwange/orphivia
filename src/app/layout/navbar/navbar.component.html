@@ -1,4 +1,4 @@
-<header class="navbar-shell">
+<header class="navbar-shell" [class.navbar-shell--hidden]="isHidden">
   <div class="brand">
     <div class="brand-mark" aria-hidden="true">
       <img
@@ -15,11 +15,15 @@
     </div>
   </div>
 
-  <nav class="navbar-nav" aria-label="Main navigation">
-    <a routerLink="/" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item">Home</a>
-    <a routerLink="/history" routerLinkActive="nav-item--active" class="nav-item">History</a>
-    <a routerLink="/voices" routerLinkActive="nav-item--active" class="nav-item">Voices</a>
-    <a routerLink="/settings" routerLinkActive="nav-item--active" class="nav-item">Settings</a>
+  <button type="button" class="mobile-toggle" (click)="toggleMenu()" aria-label="Toggle navigation">
+    ☰
+  </button>
+
+  <nav class="navbar-nav" [class.navbar-nav--open]="isMenuOpen" aria-label="Main navigation">
+    <a routerLink="/" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item" (click)="closeMenu()">Home</a>
+    <a routerLink="/history" routerLinkActive="nav-item--active" class="nav-item" (click)="closeMenu()">History</a>
+    <a routerLink="/voices" routerLinkActive="nav-item--active" class="nav-item" (click)="closeMenu()">Voices</a>
+    <a routerLink="/settings" routerLinkActive="nav-item--active" class="nav-item" (click)="closeMenu()">Settings</a>
   </nav>
 
   <div class="navbar-actions">

@@ -1,87 +1,53 @@
 import { Injectable } from '@angular/core';
 import { VoiceOption } from '../../models/voice.model';
 import { VoiceSettings } from '../../models/settings.model';
+import { ProviderService } from './provider.service';
 
 @Injectable({ providedIn: 'root' })
 export class AudioService {
+  constructor(private readonly providerService: ProviderService) {}
+
   async downloadAudio(
     text: string,
     voice: VoiceOption | null,
-    settings: VoiceSettings
+    settings: VoiceSettings,
+    providerId = 'browser',
+    outputFormat = 'mp3'
   ): Promise<void> {
-    if (!('MediaRecorder' in window) || !navigator.mediaDevices?.getDisplayMedia) {
-      console.warn('Audio download is not supported in this browser.');
-      alert('Audio download requires a browser with tab-audio capture support such as Chrome or Edge.');
+    const normalizedText = text.trim();
+    if (!normalizedText) {
+      alert('Add some text before downloading audio.');
       return;
     }
 
     try {
-      const displayStream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: true
+      const blob = await this.providerService.synthesizeAudio(providerId, voice, normalizedText, {
+        rate: settings.rate,
+        pitch: settings.pitch,
+        volume: settings.volume
       });
 
-      const audioTracks = displayStream.getAudioTracks();
-      if (!audioTracks.length) {
-        displayStream.getTracks().forEach(track => track.stop());
-        alert('Please allow tab audio capture and try again.');
-        return;
-      }
-
-      const audioOnlyStream = new MediaStream(audioTracks);
-      const recorder = new MediaRecorder(audioOnlyStream, {
-        mimeType: this.getPreferredMimeType()
-      });
-      const chunks: BlobPart[] = [];
-
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) chunks.push(event.data);
-      };
-
-      recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+      if (blob) {
+        const extension = providerId === 'browser' ? 'txt' : (outputFormat || 'mp3');
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `orphivia-${Date.now()}.webm`;
+        link.download = `orphivia-${Date.now()}.${extension}`;
         link.click();
         URL.revokeObjectURL(url);
-        displayStream.getTracks().forEach(track => track.stop());
-        audioOnlyStream.getTracks().forEach(track => track.stop());
-      };
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.volume = settings.volume;
-      utterance.rate   = settings.rate;
-      utterance.pitch  = settings.pitch;
-      if (voice) {
-        const match = window.speechSynthesis.getVoices().find(v => v.name === voice.name);
-        if (match) utterance.voice = match;
+        return;
       }
 
-      utterance.onend = () => {
-        if (recorder.state !== 'inactive') {
-          recorder.stop();
-        }
-      };
-
-      utterance.onerror = () => {
-        if (recorder.state !== 'inactive') {
-          recorder.stop();
-        }
-      };
-
-      recorder.start();
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
+      const fallbackBlob = new Blob([normalizedText], { type: 'text/plain' });
+      const url = URL.createObjectURL(fallbackBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `orphivia-${Date.now()}.txt`;
+      link.click();
+      URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Audio download failed:', err);
-      alert('Could not capture the generated audio. Please allow browser tab audio sharing and try again.');
+      alert('The requested audio could not be generated right now.');
     }
-  }
-
-  private getPreferredMimeType(): string | undefined {
-    const preferredTypes = ['audio/webm;codecs=opus', 'audio/webm'];
-    return preferredTypes.find(type => MediaRecorder.isTypeSupported(type));
   }
 }

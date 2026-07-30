@@ -37,6 +37,7 @@ export class SettingsPageComponent implements OnInit {
   ];
 
   providerOptions = [
+    { value: 'browser', label: 'Browser speech' },
     { value: 'elevenlabs', label: 'ElevenLabs' },
     { value: 'azure', label: 'Azure' },
     { value: 'google', label: 'Google' }

@@ -10,7 +10,9 @@
 
     <div class="provider-bar">
       <span class="provider-label">Provider</span>
-      <div class="provider-pill">ElevenLabs ▼</div>
+      <select class="provider-pill" [ngModel]="selectedProvider" (ngModelChange)="onProviderChange($event)">
+        <option *ngFor="let provider of providerOptions" [value]="provider.value">{{ provider.label }}</option>
+      </select>
     </div>
 
     <div class="hero-actions">
@@ -26,7 +28,7 @@
       <app-button variant="secondary" [disabled]="isDownloading" (clicked)="onDownload()">
         {{ isDownloading ? '⏳ Downloading…' : '⬇ Download' }}
       </app-button>
-      <app-button variant="secondary">⤴ Share</app-button>
+      <app-button variant="secondary" [disabled]="isSharing" (clicked)="onShare()">⤴ Share</app-button>
     </div>
 
     <div class="hero-progress">
@@ -43,6 +45,10 @@
         (input)="onSeekChange($event)"
         [disabled]="!text.trim()"
       />
+      <div class="provider-meta">
+        <span>{{ providerStatusMessage }}</span>
+        <span *ngIf="providerFeatures.length">{{ providerFeatures.join(' • ') }}</span>
+      </div>
     </div>
 
     <app-waveform [active]="isSpeaking && !isPaused" class="hero-waveform"></app-waveform>
@@ -54,18 +60,20 @@
     <!-- Text input -->
     <app-card [glow]="true" class="panel panel-large">
       <h2>Text input</h2>
-      <textarea [(ngModel)]="text" (input)="onTextChange()" placeholder="Enter your script here..." rows="9"></textarea>
+      <div class="dropzone" [class.drag-active]="dragActive" (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave()">
+        <textarea [(ngModel)]="text" (input)="onTextChange()" placeholder="Enter your script here..." rows="9"></textarea>
+      </div>
       <div class="text-actions">
-        <app-button variant="secondary">📎 Drag & drop</app-button>
-        <app-button variant="secondary">📋 Paste</app-button>
-        <app-button variant="secondary">📄 Import PDF</app-button>
-        <app-button variant="secondary">📄 Import DOCX</app-button>
+        <input #fileInput type="file" class="visually-hidden" accept=".txt,.docx,.pdf" (change)="onImportDocument($any($event.target).files?.[0])">
+        <app-button variant="secondary" (clicked)="triggerFilePicker()">📄 Import file</app-button>
+        <app-button variant="secondary" (clicked)="onPasteFromClipboard()">📋 Paste</app-button>
       </div>
       <div class="text-meta">
         <span>Word count: {{ text.split(/\s+/).filter(word => !!word).length }}</span>
         <span>Clear text</span>
       </div>
       <app-char-counter [text]="text"></app-char-counter>
+      <p class="import-error" *ngIf="importError">{{ importError }}</p>
     </app-card>
 
     <!-- Voice selection -->

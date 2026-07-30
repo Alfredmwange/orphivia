@@ -4,4 +4,6 @@ export interface VoiceOption {
   language: string;
   gender: 'male' | 'female' | 'system';
   supported: boolean;
+  description?: string;
+  provider?: string;
 }

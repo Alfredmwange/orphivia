@@ -1,5 +1,9 @@
 export const environment = {
   production: true,
   appName: 'orphivia',
-  apiEnabled: false
+  apiEnabled: false,
+  elevenlabsApiKey: '',
+  azureSpeechKey: '',
+  azureSpeechRegion: '',
+  googleCloudApiKey: ''
 };

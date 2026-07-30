@@ -6,12 +6,18 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 1.25rem 2.2rem;
-  min-height: 84px;
-  background: rgba(5, 9, 20, 0.9);
+  padding: 1rem 1.25rem;
+  min-height: 76px;
+  background: rgba(5, 9, 20, 0.92);
   border-bottom: 1px solid rgba(120, 150, 255, 0.12);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.navbar-shell--hidden {
+  transform: translateY(-110%);
+  box-shadow: none;
 }
 
 .brand {
@@ -90,6 +96,18 @@
   display: flex;
   gap: 0.35rem;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.mobile-toggle {
+  display: none;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  color: #edf1ff;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  cursor: pointer;
 }
 
 .nav-item {
@@ -123,6 +141,57 @@
   display: grid;
   place-items: center;
   font-size: 1rem;
+}
+
+@media (max-width: 760px) {
+  .navbar-shell {
+    padding: 0.9rem 1rem;
+    min-height: 70px;
+  }
+
+  .mobile-toggle {
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+  }
+
+  .navbar-nav {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 1rem;
+    left: 1rem;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.7rem;
+    border-radius: 1rem;
+    background: rgba(7, 12, 24, 0.96);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+  }
+
+  .navbar-nav--open {
+    display: flex;
+  }
+
+  .nav-item {
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+  }
+
+  .navbar-actions {
+    margin-left: 0.5rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .brand-copy {
+    display: none;
+  }
+
+  .navbar-actions .theme-toggle {
+    display: none;
+  }
 }
 
 @keyframes brandPulse {
