@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open",
-    "build": "ng build",
+    "build":"node ./node_modules/@angular/cli/bin/ng.js build",
     "test": "ng test",
     "lint": "ng lint"
   },
